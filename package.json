@@ -1,0 +1,9 @@
+{
+    "name": "bksolver",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "web-ext run -t chromium --start-url https://burgerkingelmenyem.hu"
+    },
+    "type": "module"
+}
