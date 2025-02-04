@@ -5,6 +5,7 @@
     "manifest_version": 3,
     "content_scripts": [
         {
+            "css": ["content.css"],
             "js": ["content.js"],
             "matches": ["https://burgerkingelmenyem.hu/", "https://rbixm.qualtrics.com/*"],
             "all_frames": true
