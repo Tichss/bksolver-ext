@@ -7,7 +7,11 @@
         {
             "css": ["content.css"],
             "js": ["content.js"],
-            "matches": ["https://burgerkingelmenyem.hu/", "https://rbixm.qualtrics.com/*"],
+            "matches": [
+                "https://burgerkingelmenyem.hu/",
+                "https://rbixm.qualtrics.com/*",
+                "https://survey3.medallia.eu/*"
+            ],
             "all_frames": true
         }
     ],

@@ -1,39 +1,61 @@
+/* Burger King színek */
+:root {
+    --bk-red: #d62300;
+    --bk-red-dark: #a81b00;
+    --bk-orange: #ff8732;
+    --bk-orange-dark: #e26105;
+    --bk-bun: #f5ebdc;
+}
+
 #play-button {
     position: fixed;
-    bottom: 0;
-    left: calc(50% - 40px);
-}
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2147483647;
 
-#play-button {
-    
-    padding: 16px;
-    /* background: linear-gradient(0deg, #fcfcfc 0%, #f5f5f5 100%); */
-    background: linear-gradient(0deg, #ff8732 0%, #e26105 100%);
-    border: 6px solid transparent;
-    border-radius: 16px;
-    background-clip: padding-box;
-    /* box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.5), 1px 3px 3px 2px #fff, 0 0 0 6px #ECECEC; */
-    border-radius: 16px;
-    font-family: "Inter", sans-serif;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 999px;
+
+    background: linear-gradient(180deg, var(--bk-orange) 0%, var(--bk-red) 100%);
+    color: var(--bk-bun);
+
+    font-family: "Inter", system-ui, sans-serif;
     font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     line-height: 1;
-    transition: border 0.1s ease-in-out, padding 0.1s ease-in-out, margin 0.1s ease-in-out;
+
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow:
+        0 4px 0 var(--bk-red-dark),
+        0 8px 18px rgba(214, 35, 0, 0.45);
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        filter 0.12s ease;
 }
 
-#play-button:after {
-    position: absolute;
-    top: -6px;
-    bottom: -6px;
-    left: -6px;
-    right: -6px;
-    background: linear-gradient(#fff, #ededed);
-    background: linear-gradient(0deg, #a85b24 0%, #e26105 100%);
-    content: "";
-    z-index: -1;
-    border-radius: 16px;
+#play-button:hover {
+    filter: brightness(1.06);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow:
+        0 6px 0 var(--bk-red-dark),
+        0 12px 22px rgba(214, 35, 0, 0.5);
 }
 
 #play-button:active {
-    border-top: 1px solid transparent;
+    transform: translateX(-50%) translateY(3px);
+    box-shadow:
+        0 1px 0 var(--bk-red-dark),
+        0 3px 8px rgba(214, 35, 0, 0.4);
+}
+
+#play-button:focus-visible {
+    outline: 3px solid var(--bk-orange);
+    outline-offset: 3px;
 }

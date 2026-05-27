@@ -5,5 +5,8 @@
     "scripts": {
         "dev": "web-ext run -t chromium --start-url https://burgerkingelmenyem.hu"
     },
-    "type": "module"
+    "type": "module",
+    "devDependencies": {
+        "web-ext": "^10.2.0"
+    }
 }

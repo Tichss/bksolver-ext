@@ -1,65 +1,105 @@
-if (window.location.href.startsWith('https://rbixm.qualtrics.com/')) {
-    console.log('start 1.0.0');
+(() => {
+    const QUALTRICS_URL = 'https://rbixm.qualtrics.com/';
+    const MEDALLIA_URL = 'https://survey3.medallia.eu';
+    const ITERATE_INTERVAL_MS = 2000;
+    const TEXTAREA_VALASZ = 'Minden finom, minden jó';
 
-    let bkCode = '18440';
-    let datum = '05/09/2024';
-    let ora = '12';
-    let perc = '22';
-    let napszak = '1';
+    // Régi session: alap + paraméterek külön, hogy bővíthető legyen.
+    const QUALTRICS_SESSION_BASE = 'https://rbixm.qualtrics.com/jfe/form/SV_9MHgHFvPm0OEHr0';
+    const QUALTRICS_SESSION_PARAMS = '?CountryCode=HUN&Q_Language=HU&PT=1';
+    const QUALTRICS_SESSION_URL = QUALTRICS_SESSION_BASE + QUALTRICS_SESSION_PARAMS;
 
-    bkCode = null;
-    datum = null;
-    ora = null;
-    perc = null;
-    napszak = null;
+    const href = window.location.href;
 
-    let intervall;
-    const buttonStop = document.createElement('BUTTON');
-    buttonStop.innerText = 'Start2';
-    buttonStop.id = 'play-button';
+    if (href.startsWith(QUALTRICS_URL)) {
+        initSolver();
+    } else if (href.startsWith(MEDALLIA_URL)) {
+        initSessionLink();
+    }
 
-    buttonStop.addEventListener('click', () => {
-        if (intervall) {
-            clearInterval(intervall);
-            intervall = null;
-            buttonStop.innerText = 'Start';
-        } else {
-            intervall = setInterval(iterate, 2000);
-            buttonStop.innerText = 'Stop';
-        }
-    });
-    document.body.appendChild(buttonStop);
+    // Qualtrics oldal: automata kitöltő Start/Stop gomb.
+    function initSolver() {
+        /** @type {ReturnType<typeof setInterval> | null} */
+        let intervall = null;
+
+        const buttonStop = document.createElement('BUTTON');
+        buttonStop.innerText = 'Start';
+        buttonStop.id = 'play-button';
+
+        buttonStop.addEventListener('click', () => {
+            if (intervall) {
+                clearInterval(intervall);
+                intervall = null;
+                buttonStop.innerText = 'Start';
+            } else {
+                intervall = setInterval(iterate, ITERATE_INTERVAL_MS);
+                buttonStop.innerText = 'Stop';
+            }
+        });
+
+        document.body.appendChild(buttonStop);
+    }
+
+    // Medallia oldal: link a régi qualtrics session-re.
+    function initSessionLink() {
+        const link = document.createElement('A');
+        link.innerText = 'Régi session';
+        link.id = 'play-button';
+        link.setAttribute('href', QUALTRICS_SESSION_URL);
+        /* link.setAttribute('target', '_top'); */
+
+        document.body.appendChild(link);
+    }
 
     function iterate() {
-        console.log('Iterate');
-
-        const labelSingle = document.getElementsByClassName('SingleAnswer')?.[0];
-        const labelMulti = document.getElementsByClassName('MultipleAnswer')?.[0];
-        const tds = document.getElementsByClassName('c4');
-        const textarea = document.getElementsByClassName('InputText')?.[0];
-
-        if (labelSingle || labelMulti || tds?.length || textarea) {
-            if (labelSingle && labelSingle?.id?.startsWith('QID')) {
-                labelSingle.click();
-            } else if (labelMulti && labelMulti.id.startsWith('QID')) {
-                labelMulti.click();
-            } else if (tds.length) {
-                for (let i = 0; i < tds.length; i++) {
-                    const input = tds[i].querySelectorAll('input[type="radio"]')?.[0];
-
-                    if (input) {
-                        input.click();
-                    }
-                }
-            } else if (textarea) {
-                textarea.value = 'Hacked by soza';
-            }
+        if (fillAnswer()) {
             clickNext();
         }
     }
 
-    function clickNext() {
-        const nextBtn = document.querySelector('#NextButton');
-        nextBtn.click();
+    // Megpróbálja kitölteni az aktuális kérdést. true, ha talált és kitöltött valamit.
+    function fillAnswer() {
+        const labelSingle = /** @type {HTMLElement} */ (
+            document.getElementsByClassName('SingleAnswer')?.[0]
+        );
+        const labelMulti = /** @type {HTMLElement} */ (
+            document.getElementsByClassName('MultipleAnswer')?.[0]
+        );
+        const tds = document.getElementsByClassName('c4');
+        const textarea = /** @type {HTMLInputElement} */ (
+            document.getElementsByClassName('InputText')?.[0]
+        );
+
+        if (labelSingle?.id?.startsWith('QID')) {
+            labelSingle.click();
+            return true;
+        }
+
+        if (labelMulti?.id?.startsWith('QID')) {
+            labelMulti.click();
+            return true;
+        }
+
+        if (tds.length) {
+            for (let i = 0; i < tds.length; i++) {
+                const input = /** @type {HTMLElement} */ (
+                    tds[i].querySelectorAll('input[type="radio"]')?.[0]
+                );
+                input?.click();
+            }
+            return true;
+        }
+
+        if (textarea) {
+            textarea.value = TEXTAREA_VALASZ;
+            return true;
+        }
+
+        return false;
     }
-}
+
+    function clickNext() {
+        const nextBtn = /** @type {HTMLElement} */ (document.querySelector('#NextButton'));
+        nextBtn?.click();
+    }
+})();
